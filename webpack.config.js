@@ -100,8 +100,8 @@ module.exports = {
 
   performance: {
     hints: "warning", // enum
-    maxAssetSize: 20000000, // int (in bytes),
-    maxEntrypointSize: 40000000, // int (in bytes)
+    maxAssetSize: 200000000, // int (in bytes),
+    maxEntrypointSize: 400000000, // int (in bytes)
     assetFilter: (assetFilename) => {
       // Function predicate that provides asset filenames
       return assetFilename.endsWith(".css") || assetFilename.endsWith(".js");
@@ -127,6 +127,8 @@ module.exports = {
   // the environment in which the bundle should run
   // changes chunk loading behavior and available modules
 
+  experiments: { outputModule: true },
+  externalsType: "import",
   externals: [],
   // Don't follow/bundle these modules, but request them at runtime from the environment
 
@@ -136,7 +138,15 @@ module.exports = {
   devServer: {
     compress: true, // enable gzip compression
     historyApiFallback: true, // true for index.html upon 404, object for multiple paths
-    hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin
+    hot: true // hot module replacement. Depends on HotModuleReplacementPlugin
+    // proxy: {
+    //   "/plaid": "http://localhost:8081/plaid"
+    // }
+    // headers: {
+    //   "Access-Control-Allow-Origin": "*",
+    //   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+    //   "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    // }
   },
 
   plugins: (function () {

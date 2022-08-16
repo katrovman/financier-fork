@@ -19,6 +19,7 @@ angular
           $rootScope.$broadcast("drop:close");
 
           const template = require("./editAccount.html").default;
+          const plaidLinkScript = require("https://cdn.plaid.com/link/v2/stable/link-initialize.js").default;
 
           const wrap = angular.element("<div></div>").append(template);
           const content = $compile(wrap)($scope);
@@ -41,6 +42,7 @@ angular
             this.name = this.editAccount.name;
             this.note = this.editAccount.note;
             this.checkNumber = this.editAccount.checkNumber;
+            this.linkToken = this.editAccount.linkToken;
 
             content.find("input")[0].focus();
           });
@@ -67,6 +69,7 @@ angular
             this.editAccount.name = this.name;
             this.editAccount.note = this.note;
             this.editAccount.checkNumber = this.checkNumber;
+            this.editAccount.linkToken = this.linkToken;
 
             this.editAccount.fn = saveFn;
             this.editAccount.emitChange();
@@ -92,6 +95,41 @@ angular
             this.onRemoveAccount({ account: this.editAccount });
 
             dropInstance.close();
+          };
+
+          this.plaidLink = () => {
+            console.log("Create Plaid Link Token function");
+
+            //TODO: CHANGE URL
+            fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
+              response.json().then((data) => {
+                console.log(data.data);
+                this.linkToken = data.data;
+
+                // require.ensure(['https://cdn.plaid.com/link/v2/stable/link-initialize.js'], require => {
+
+                // });
+
+                // const linkHandler = Plaid.create({
+                //   token: this.linkToken,
+                //   onSuccess: (public_token, metadata) => {
+                //     // await fetch("/get_access_token", {
+                //     //   method: "POST",
+                //     //   body: public_token,
+                //     // });
+                //   },
+                //   onExit: (err, metadata) => {
+                //     // if (err != null && err.error_code === "INVALID_LINK_TOKEN") {
+                //     //   linkHandler.destroy();
+                //     // }
+                //     // if (err != null) {
+                //     // }
+                //   },
+                // });
+              });
+            }).catch((error) => {
+              console.log(error);
+            });
           };
 
           dropInstance.open();

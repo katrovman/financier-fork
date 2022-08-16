@@ -7,6 +7,8 @@ const uuid = require("uuid");
 const csp = require("helmet-csp");
 const cheerio = require("cheerio");
 
+const plaidApp = require("../api/plaid.js");
+
 const app = express();
 
 app.use("/docs", express.static(path.join(__dirname, "../docs")));
