@@ -127,8 +127,8 @@ module.exports = {
   // the environment in which the bundle should run
   // changes chunk loading behavior and available modules
 
-  // experiments: { outputModule: true },
-  // externalsType: "import",
+  experiments: { outputModule: true },
+  externalsType: "module",
   externals: [],
   // Don't follow/bundle these modules, but request them at runtime from the environment
 

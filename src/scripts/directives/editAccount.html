@@ -28,12 +28,12 @@
     </label>
     <br />
 
-    <!-- <div>
-      <label class="button button--primary" onclick="Plaid.create({ token: linkToken, onSuccess: (public_token, metadata) => {}, onLoad: () => {}, onExit: (err, metadata) => {}, onEvent: (eventName, metadata) => {}, })">
+    <div>
+      <label class="button button--primary" ng-click="editAccountCtrl.plaidLink()">
         Connect to Plaid
       </label>
       <textarea id="linkTokenText" ng-model="editAccountCtrl.linkToken"></textarea>
-    </div> -->
+    </div>
 
     <div>
       <button

@@ -2,7 +2,7 @@ import Drop from "tether-drop";
 
 angular
   .module("financier")
-  .directive("editAccount", ($compile, $timeout, $rootScope) => {
+  .directive("editAccount", ($compile, $timeout, $rootScope, plaidLazyLoader) => {
     return {
       restrict: "A",
       bindToController: {
@@ -97,8 +97,31 @@ angular
             dropInstance.close();
           };
 
-          // this.plaidLink = () => {
-          //   console.log("Create Plaid Link Token function");
+          this.plaidLink = () => {
+            console.log("Create Plaid Link Token function");
+
+            let plaid = plaidLazyLoader;
+
+            fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
+              response.json().then((data) => {
+                this.linkToken = data.data;
+
+                const handler = window.Plaid.create({
+                  token: this.linkToken,
+                  onSuccess: (public_token, metadata) => {
+    
+                  },
+                  onLoad: () => {
+                    console.log("Plaid Link loaded");
+                  },
+                  onExit: (err, metadata) => {
+                    
+                  },
+                });
+                handler.open();
+              });
+            });
+            
 
           //   //TODO: CHANGE URL
           //   fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
@@ -130,7 +153,7 @@ angular
           //   }).catch((error) => {
           //     console.log(error);
           //   });
-          // };
+          };
 
           dropInstance.open();
         });

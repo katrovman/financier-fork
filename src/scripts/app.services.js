@@ -24,3 +24,5 @@ import "./services/flags";
 import "./services/backup";
 
 import "./services/reports/netWorth";
+
+import "./services/plaidLazyLoader";
