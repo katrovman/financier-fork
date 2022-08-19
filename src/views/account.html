@@ -143,7 +143,9 @@
       >
         <i class="fa fa-exchange"></i> {{'MAKE_A_TRANSFER' | translate}}
       </button>
-
+      <button class="account__add-button" ng-if="true">
+        <i class="fa fa-plus"></i> Connect to Plaid
+      </button>
       <button
         class="account__add-button"
         ng-if="accountCtrl.selectedTransactions.length"
