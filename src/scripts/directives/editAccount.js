@@ -19,7 +19,6 @@ angular
           $rootScope.$broadcast("drop:close");
 
           const template = require("./editAccount.html").default;
-          // const plaidLinkScript = require("https://cdn.plaid.com/link/v2/stable/link-initialize.js").default;
 
           const wrap = angular.element("<div></div>").append(template);
           const content = $compile(wrap)($scope);

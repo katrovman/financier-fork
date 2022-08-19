@@ -139,14 +139,6 @@ module.exports = {
     compress: true, // enable gzip compression
     historyApiFallback: true, // true for index.html upon 404, object for multiple paths
     hot: true // hot module replacement. Depends on HotModuleReplacementPlugin
-    // proxy: {
-    //   "/plaid": "http://localhost:8081/plaid"
-    // }
-    // headers: {
-    //   "Access-Control-Allow-Origin": "*",
-    //   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-    //   "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-    // }
   },
 
   plugins: (function () {
