@@ -454,9 +454,9 @@ angular
 
         let plaid = plaidLazyLoader;
 
-        fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
+        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
-            this.linkToken = data.data;
+            this.linkToken = data.link_token;
 
             const handler = window.Plaid.create({
               token: this.linkToken,
