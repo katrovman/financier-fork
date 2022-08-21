@@ -454,14 +454,23 @@ angular
 
         let plaid = plaidLazyLoader;
 
-        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/make_link_token", { method: "POST" }).then((response) => {
+        fetch("http://localhost:8787/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
             this.linkToken = data.link_token;
-
             const handler = window.Plaid.create({
               token: this.linkToken,
               onSuccess: (public_token, metadata) => {
-
+                fetch("http://localhost:8787/plaid/exchange_public_token", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    public_token: public_token,
+                    accounts: metadata.accounts,
+                    institution: metadata.institution,
+                    link_session_id: metadata.link_session_id,
+                  }),
+                }).then((response) => {
+                  console.log(response);
+                });
               },
               onLoad: () => {
                 console.log("Plaid Link loaded");
