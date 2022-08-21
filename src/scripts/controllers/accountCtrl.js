@@ -469,7 +469,9 @@ angular
                     link_session_id: metadata.link_session_id,
                   }),
                 }).then((response) => {
-                  console.log(response);
+                  response.json().then((data) => {
+                    console.log(data);
+                  });
                 });
               },
               onLoad: () => {
