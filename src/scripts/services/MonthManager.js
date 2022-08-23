@@ -337,7 +337,6 @@ angular.module("financier").factory("monthManager", (month, account) => {
       updateAccount(acc) {
         const index = this.accounts.indexOf(acc);
 
-        acc.subscribe(this.saveFn);
         this.accounts[index] = acc;
       }
 
