@@ -450,7 +450,7 @@ angular
       };
 
       this.plaidLink = () => {
-        console.log("Create Plaid Link Token function");
+        // console.log("Create Plaid Link Token function");
 
         let plaid = plaidLazyLoader;
 
@@ -476,7 +476,7 @@ angular
                 });
               },
               onLoad: () => {
-                console.log("Plaid Link loaded");
+                // console.log("Plaid Link loaded");
               },
               onExit: (err, metadata) => {
                 
