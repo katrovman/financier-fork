@@ -470,7 +470,9 @@ angular
                   }),
                 }).then((response) => {
                   response.json().then((data) => {
-                    console.log(data);
+                    this.manager.plaid_access_token = data.access_token;
+                    console.log(this.account);
+                    console.log(manager.plaid_access_token);
                   });
                 });
               },

@@ -332,6 +332,16 @@ angular.module("financier").factory("monthManager", (month, account) => {
       }
 
       /**
+       * Add new method to update an account
+      */
+      updateAccount(acc) {
+        const index = this.accounts.indexOf(acc);
+
+        acc.subscribe(this.saveFn);
+        this.accounts[index] = acc;
+      }
+
+      /**
        * Will link together two months, should *probably* be
        * one immediately after the other (e.g. `_linkMonths(Sep, Oct)`).
        *

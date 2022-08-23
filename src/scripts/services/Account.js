@@ -20,6 +20,7 @@ angular.module("financier").factory("account", (uuid) => {
             sort: 0,
             onBudget: true,
             checkNumber: false,
+            plaid_access_token: null
           },
           data
         );
@@ -304,6 +305,22 @@ angular.module("financier").factory("account", (uuid) => {
 
       get _id() {
         return this.data._id;
+      }
+
+      /**
+       * Add new parameter plaid_access_token if connected to Plaid
+       * to be able to pull transactions or make updates from any
+       * data as appropriate
+       * 
+       * @type {string}
+      */
+      get plaid_access_token() {
+        return this.data.plaid_access_token;
+      }
+
+      set plaid_access_token(pat) {
+        this.data.plaid_access_token = pat;
+        this.emitChange();
       }
 
       /**
