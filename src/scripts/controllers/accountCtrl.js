@@ -471,6 +471,7 @@ angular
                 }).then((response) => {
                   response.json().then((data) => {
                     this.account.plaid_access_token = data.access_token;
+                    this.account.plaid_item_id = data.item_id;
                     this.manager.updateAccount(this.account);
                   });
                 });

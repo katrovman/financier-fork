@@ -20,7 +20,8 @@ angular.module("financier").factory("account", (uuid) => {
             sort: 0,
             onBudget: true,
             checkNumber: false,
-            plaid_access_token: null
+            plaid_access_token: null,
+            plaid_item_id: null
           },
           data
         );
@@ -322,6 +323,21 @@ angular.module("financier").factory("account", (uuid) => {
         this.data.plaid_access_token = pat;
         this.emitChange();
       }
+
+      /**
+       * Add new parameter for item_id if connected to Plaid to be able
+       * to pull transactions or make updates from any data as appropriate
+       * 
+       * @type {string}
+      */
+     get plaid_item_id() {
+      return this.data.plaid_item_id;
+     }
+
+     set plaid_item_id(pii) {
+      this.data.plaid_item_id = pii;
+      this.emitChange();
+     }
 
       /**
        * Used to set the function to invoke upon record changes.
