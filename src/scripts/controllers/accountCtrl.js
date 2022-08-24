@@ -18,7 +18,8 @@ angular
       myBudget,
       budgetRecord,
       Hotkeys,
-      plaidLazyLoader
+      plaidLazyLoader,
+      ngDialog
     ) {
       const that = this;
 
@@ -450,8 +451,6 @@ angular
       };
 
       this.plaidLink = () => {
-        // console.log("Create Plaid Link Token function");
-
         let plaid = plaidLazyLoader;
 
         fetch("http://localhost:8787/plaid/make_link_token", { method: "POST" }).then((response) => {
@@ -460,30 +459,48 @@ angular
             const handler = window.Plaid.create({
               token: this.linkToken,
               onSuccess: (public_token, metadata) => {
-                fetch("http://localhost:8787/plaid/exchange_public_token", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    public_token: public_token,
-                    accounts: metadata.accounts,
-                    institution: metadata.institution,
-                    link_session_id: metadata.link_session_id,
-                  }),
-                }).then((response) => {
-                  response.json().then((data) => {
-                    this.account.plaid_access_token = data.access_token;
-                    this.account.plaid_item_id = data.item_id;
-                    this.manager.updateAccount(this.account);
-                  });
-                });
+                this.onPlaidLinkSuccess(public_token, metadata);
               },
               onLoad: () => {
                 // console.log("Plaid Link loaded");
               },
               onExit: (err, metadata) => {
-                
               },
             });
             handler.open();
+          });
+        });
+      }
+
+      this.onPlaidLinkSuccess = (public_token, metadata) => {
+        var dialog = ngDialog.open({
+          template: require("../../views/modal/selectPlaidAccount.html").default,
+          controller: "selectPlaidAccountCtrl as selectPlaidAccountCtrl",
+          resolve: {
+            public_token: () => public_token,
+            metadata: () => metadata,
+            account: () => this.account,
+          },
+        });
+
+        dialog.closePromise.then((dialogData) => {
+          console.log(dialogData.value);
+          fetch("http://localhost:8787/plaid/exchange_public_token", {
+            method: "POST",
+            body: JSON.stringify({
+              public_token: public_token,
+              accounts: metadata.accounts,
+              institution: metadata.institution,
+              link_session_id: metadata.link_session_id,
+            }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              this.account.plaid_access_token = data.access_token;
+              this.account.plaid_item_id = dialogData.value;
+              this.manager.updateAccount(this.account);
+              console.log(this.account);
+            });
           });
         });
       }
