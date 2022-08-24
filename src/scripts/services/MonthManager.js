@@ -335,9 +335,11 @@ angular.module("financier").factory("monthManager", (month, account) => {
        * Add new method to update an account
       */
       updateAccount(acc) {
-        const index = this.accounts.indexOf(acc);
-
-        this.accounts[index] = acc;
+        for (let i = 0; i < this.accounts.length; i++) {
+          if (this.accounts[i].id === acc.id) {
+            this.accounts[i] = acc;
+          }
+        }
       }
 
       /**
