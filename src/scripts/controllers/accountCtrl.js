@@ -452,7 +452,7 @@ angular
 
       this.plaidLink = () => {
         let plaid = plaidLazyLoader;
-
+console.log(this.account);
         fetch("http://localhost:8787/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
             this.linkToken = data.link_token;

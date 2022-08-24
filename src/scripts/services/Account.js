@@ -330,14 +330,14 @@ angular.module("financier").factory("account", (uuid) => {
        * 
        * @type {string}
       */
-     get plaid_item_id() {
-      return this.data.plaid_item_id;
-     }
+      get plaid_item_id() {
+        return this.data.plaid_item_id;
+      }
 
-     set plaid_item_id(pii) {
-      this.data.plaid_item_id = pii;
-      this.emitChange();
-     }
+      set plaid_item_id(pii) {
+        this.data.plaid_item_id = pii;
+        this.emitChange();
+      }
 
       /**
        * Used to set the function to invoke upon record changes.
