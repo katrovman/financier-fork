@@ -473,11 +473,11 @@ angular
                     this.account.plaid_access_token = data.access_token;
                     this.account.plaid_item_id = data.item_id;
                     this.manager.updateAccount(this.account);
+                    $scope.$apply();
                   });
                 });
               },
               onLoad: () => {
-                // console.log("Plaid Link loaded");
               },
               onExit: (err, metadata) => {
               },
@@ -495,8 +495,10 @@ angular
             plaid_item_id: this.account.plaid_item_id,
           }),
         }).then((response) => {
-          response.json().then((data) => {
-            console.log(data);
+          response.json().then((transactions) => {
+            for (let trans in transactions.added) {
+              console.log(trans);
+            }
           });
         });
       }
