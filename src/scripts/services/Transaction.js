@@ -29,6 +29,8 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
             transfer: null,
             splits: [],
             checkNumber: null,
+            pending: false,
+            imported_id: null,
           },
           data
         );
@@ -394,6 +396,14 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
         this._data.flag = x;
 
         this._emitChange();
+      }
+
+      get pending() {
+        return this._data.pending;
+      }
+
+      set pending(x) {
+        this._data.pending = x;
       }
 
       get data() {

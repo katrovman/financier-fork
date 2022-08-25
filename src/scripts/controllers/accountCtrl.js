@@ -496,9 +496,24 @@ angular
           }),
         }).then((response) => {
           response.json().then((transactions) => {
-            for (let trans in transactions.added) {
-              console.log(trans);
+            for (var i = 0; i < transactions.added.length; i++) {
+              let trans = transactions.added[i];
+
+              const addTrans = new Transaction({
+                value: trans.amount * 100,
+                cleared: !trans.pending,
+                reconciled: false,
+                date: trans.date,
+                account: this.accountId,
+                payee: trans.name,
+                imported_id: trans.transaction_id,
+                category: "",
+              });
+
+              this.account.addTransaction(addTrans);
             }
+            this.account.emitChange();
+            $scope.$apply();
           });
         });
       }
