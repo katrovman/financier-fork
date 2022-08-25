@@ -321,7 +321,6 @@ angular.module("financier").factory("account", (uuid) => {
 
       set plaid_access_token(pat) {
         this.data.plaid_access_token = pat;
-        this.emitChange();
       }
 
       /**
@@ -336,7 +335,6 @@ angular.module("financier").factory("account", (uuid) => {
 
       set plaid_item_id(pii) {
         this.data.plaid_item_id = pii;
-        this.emitChange();
       }
 
       /**

@@ -452,7 +452,7 @@ angular
 
       this.plaidLink = () => {
         let plaid = plaidLazyLoader;
-console.log(this.account);
+
         fetch("http://localhost:8787/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
             this.linkToken = data.link_token;
@@ -479,12 +479,10 @@ console.log(this.account);
           resolve: {
             public_token: () => public_token,
             metadata: () => metadata,
-            account: () => this.account,
           },
         });
 
         dialog.closePromise.then((dialogData) => {
-          console.log(dialogData.value);
           fetch("http://localhost:8787/plaid/exchange_public_token", {
             method: "POST",
             body: JSON.stringify({
@@ -495,14 +493,22 @@ console.log(this.account);
             }),
           }).then((response) => {
             response.json().then((data) => {
-              console.log(data);
               this.account.plaid_access_token = data.access_token;
               this.account.plaid_item_id = dialogData.value;
               this.manager.updateAccount(this.account);
-              console.log(this.account);
             });
           });
         });
+      }
+
+      this.plaidSync = () => {
+
+      }
+
+      this.plaidDisconnect = () => {
+        this.account.plaid_access_token = null;
+        this.account.plaid_item_id = null;
+        this.manager.updateAccount(this.account);
       }
 
       that.selectGetterSetter = (trans) => {

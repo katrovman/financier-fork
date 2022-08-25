@@ -338,6 +338,7 @@ angular.module("financier").factory("monthManager", (month, account) => {
         for (let i = 0; i < this.accounts.length; i++) {
           if (this.accounts[i].id === acc.id) {
             this.accounts[i] = acc;
+            acc.emitChange();
           }
         }
       }

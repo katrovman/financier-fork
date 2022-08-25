@@ -1,9 +1,8 @@
 angular
     .module("financier")
-    .controller("selectPlaidAccountCtrl", function($scope, public_token, metadata, account) {
+    .controller("selectPlaidAccountCtrl", function($scope, public_token, metadata) {
         this.metadata = metadata;
         this.public_token = public_token;
-        this.account = account;
 
         this.selectedAccount = "";
 
