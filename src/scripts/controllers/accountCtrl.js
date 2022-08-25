@@ -459,7 +459,22 @@ angular
             const handler = window.Plaid.create({
               token: this.linkToken,
               onSuccess: (public_token, metadata) => {
-                this.onPlaidLinkSuccess(public_token, metadata);
+                // this.onPlaidLinkSuccess(public_token, metadata);
+                fetch("http://localhost:8787/plaid/exchange_public_token", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    public_token: public_token,
+                    accounts: metadata.accounts,
+                    institution: metadata.institution,
+                    link_session_id: metadata.link_session_id,
+                  }),
+                }).then((response) => {
+                  response.json().then((data) => {
+                    this.account.plaid_access_token = data.access_token;
+                    this.account.plaid_item_id = data.item_id;
+                    this.manager.updateAccount(this.account);
+                  });
+                });
               },
               onLoad: () => {
                 // console.log("Plaid Link loaded");
@@ -472,37 +487,18 @@ angular
         });
       }
 
-      this.onPlaidLinkSuccess = (public_token, metadata) => {
-        var dialog = ngDialog.open({
-          template: require("../../views/modal/selectPlaidAccount.html").default,
-          controller: "selectPlaidAccountCtrl as selectPlaidAccountCtrl",
-          resolve: {
-            public_token: () => public_token,
-            metadata: () => metadata,
-          },
-        });
-
-        dialog.closePromise.then((dialogData) => {
-          fetch("http://localhost:8787/plaid/exchange_public_token", {
-            method: "POST",
-            body: JSON.stringify({
-              public_token: public_token,
-              accounts: metadata.accounts,
-              institution: metadata.institution,
-              link_session_id: metadata.link_session_id,
-            }),
-          }).then((response) => {
-            response.json().then((data) => {
-              this.account.plaid_access_token = data.access_token;
-              this.account.plaid_item_id = dialogData.value;
-              this.manager.updateAccount(this.account);
-            });
+      this.plaidSync = () => {
+        fetch("http://localhost:8787/plaid/transactions", {
+          method: "POST",
+          body: JSON.stringify({
+            access_token: this.account.plaid_access_token,
+            plaid_item_id: this.account.plaid_item_id,
+          }),
+        }).then((response) => {
+          response.json().then((data) => {
+            console.log(data);
           });
         });
-      }
-
-      this.plaidSync = () => {
-
       }
 
       this.plaidDisconnect = () => {
