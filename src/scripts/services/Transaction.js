@@ -406,6 +406,14 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
         this._data.pending = x;
       }
 
+      get imported_id() {
+        return this._data.imported_id;
+      }
+
+      set imported_id(x) {
+        this._data.imported_id = x;
+      }
+
       get data() {
         return this._data;
       }

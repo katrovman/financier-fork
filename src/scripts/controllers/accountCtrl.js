@@ -494,8 +494,18 @@ angular
           }),
         }).then((response) => {
           response.json().then((transactions) => {
+            //Only import transactions on or after the Initial balance date
+            let startDate = moment(this.account.transactions.find(p => p.payee == "initial-balance").date).format("YYYY-MM-DD");
+
             for (var i = 0; i < transactions.added.length; i++) {
               let trans = transactions.added[i];
+
+              //If the trans date is before initial date, skip
+              if (trans.date <= startDate) continue;
+
+              //If it has already been imported, skip
+              if (this.account.transactions.some(p => p.imported_id === trans.transaction_id)) continue;
+
 
               const addTrans = new Transaction({
                 value: -(trans.amount * 100),
@@ -505,12 +515,19 @@ angular
                 account: this.accountId,
                 payee: trans.name,
                 imported_id: trans.transaction_id,
-                category: "",
               });
 
-              this.account.addTransaction(addTrans);
+              this.manager.addTransaction(addTrans);
+              myBudget.put(addTrans);
             }
-            // this.account.emitChange();
+
+            //Compare modified transactions to any existing transactions
+            for (var i = 0; i < transactions.modified.length; i++) {
+            }
+
+            //Compare removed transactions to any existing transactions
+            for (var i = 0; i < transactions.removed.length; i++) {
+            }
             $scope.$apply();
           });
         });
