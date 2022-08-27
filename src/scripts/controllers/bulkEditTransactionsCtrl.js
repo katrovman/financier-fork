@@ -81,5 +81,13 @@ angular
           delete $scope.payees[transaction.payee];
         }
       }
+
+      this.matchTransactions = (transactions, event) => {
+        if (transactions.length == 2) {
+          console.log(transactions);
+
+          //Need to figure out the proper logic for matching two transactions
+        }
+      }
     }
   );

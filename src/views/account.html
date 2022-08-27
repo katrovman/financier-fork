@@ -147,10 +147,10 @@
         <i class="fa fa-refresh"></i> Sync with Plaid
       </button>
       <button class="account__add-button" ng-if="accountCtrl.account.plaid_access_token === null" ng-click="accountCtrl.plaidLink()">
-        <i class="fa fa-rss"></i> Connect to Plaid
+        <i class="fa fa-sign-in"></i> Connect to Plaid
       </button>
       <button class="account__add-button" ng-if="accountCtrl.account.plaid_access_token !== null" ng-click="accountCtrl.plaidDisconnect()">
-        <i class="fa fa-close"></i> Disconnect from Plaid
+        <i class="fa fa-sign-out"></i> Disconnect from Plaid
       </button>
       <button
         class="account__add-button"

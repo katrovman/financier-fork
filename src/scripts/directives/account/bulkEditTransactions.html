@@ -4,4 +4,7 @@
     ng-click="bulkEditTransactionsCtrl.removeAll(bulkEditTransactions, $event)"
     translate="DELETE"
   ></li>
+  <li class="dropdown__item" ng-style="bulkEditTransactions.length != 2 && {'pointer-events':'none', 'opacity':'0.4'}" ng-click="bulkEditTransactionsCtrl.matchTransactions(bulkEditTransactions, $event)">
+    Match
+  </li>
 </ul>
