@@ -515,6 +515,7 @@ angular
                 account: this.accountId,
                 payee: trans.name,
                 imported_id: trans.transaction_id,
+                pending: trans.pending,
               });
 
               this.manager.addTransaction(addTrans);

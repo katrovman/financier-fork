@@ -120,38 +120,6 @@ angular
                 handler.open();
               });
             });
-            
-
-          //   //TODO: CHANGE URL
-          //   fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
-          //     response.json().then((data) => {
-          //       console.log(data.data);
-          //       this.linkToken = data.data;
-
-          //       // require.ensure(['https://cdn.plaid.com/link/v2/stable/link-initialize.js'], require => {
-
-          //       // });
-
-          //       // const linkHandler = Plaid.create({
-          //       //   token: this.linkToken,
-          //       //   onSuccess: (public_token, metadata) => {
-          //       //     // await fetch("/get_access_token", {
-          //       //     //   method: "POST",
-          //       //     //   body: public_token,
-          //       //     // });
-          //       //   },
-          //       //   onExit: (err, metadata) => {
-          //       //     // if (err != null && err.error_code === "INVALID_LINK_TOKEN") {
-          //       //     //   linkHandler.destroy();
-          //       //     // }
-          //       //     // if (err != null) {
-          //       //     // }
-          //       //   },
-          //       // });
-          //     });
-          //   }).catch((error) => {
-          //     console.log(error);
-          //   });
           };
 
           dropInstance.open();
