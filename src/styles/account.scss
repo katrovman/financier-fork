@@ -16,6 +16,28 @@ $break-width: 900px;
   box-sizing: inherit;
 }
 
+.account__info {
+  margin-top: 9px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.account__header-info {
+  margin-top: 3px;
+  margin-left: 5px;
+  transform: scale(1.3);
+
+  color: $white;
+}
+
+.account__info {
+  margin-top: 9px;
+  margin-left: 4px;
+  color: #ccc;
+  cursor: pointer;
+  pointer-events:none;
+}
+
 .account__flag {
   @include ribbon(12px);
   margin-top: 9px;
@@ -355,6 +377,12 @@ i.account__reconcile-close {
 .account__cell-outflow,
 .account__cell-inflow {
   width: 10rem;
+}
+
+.account__th--info,
+.account__td--info {
+  flex-shrink: 0;
+  width: 40px;
 }
 
 .account__th--flag,

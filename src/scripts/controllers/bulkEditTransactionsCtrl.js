@@ -87,6 +87,8 @@ angular
           console.log(transactions);
 
           //Need to figure out the proper logic for matching two transactions
+          transactions[0].matched_id = transactions[1].id;
+          transactions[1].matched_id = transactions[0].id;
         }
       }
     }
