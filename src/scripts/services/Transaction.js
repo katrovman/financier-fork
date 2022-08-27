@@ -31,6 +31,7 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
             checkNumber: null,
             pending: false,
             imported_id: null,
+            matched_id: null,
           },
           data
         );
@@ -412,6 +413,14 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
 
       set imported_id(x) {
         this._data.imported_id = x;
+      }
+
+      get matched_id() {
+        return this._data.matched_id;
+      }
+
+      set matched_id(x) {
+        this._data.matched_id = x;
       }
 
       get data() {

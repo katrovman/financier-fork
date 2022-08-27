@@ -96,32 +96,6 @@ angular
             dropInstance.close();
           };
 
-          this.plaidLink = () => {
-            console.log("Create Plaid Link Token function");
-
-            let plaid = plaidLazyLoader;
-
-            fetch("http://localhost:5006/plaid/make_link_token", { method: "POST" }).then((response) => {
-              response.json().then((data) => {
-                this.linkToken = data.data;
-
-                const handler = window.Plaid.create({
-                  token: this.linkToken,
-                  onSuccess: (public_token, metadata) => {
-    
-                  },
-                  onLoad: () => {
-                    console.log("Plaid Link loaded");
-                  },
-                  onExit: (err, metadata) => {
-                    
-                  },
-                });
-                handler.open();
-              });
-            });
-          };
-
           dropInstance.open();
         });
       },
