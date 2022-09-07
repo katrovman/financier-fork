@@ -21,7 +21,8 @@ angular.module("financier").factory("account", (uuid) => {
             onBudget: true,
             checkNumber: false,
             plaid_access_token: null,
-            plaid_item_id: null
+            plaid_item_id: null,
+            plaid_is_connected: false
           },
           data
         );
@@ -335,6 +336,18 @@ angular.module("financier").factory("account", (uuid) => {
 
       set plaid_item_id(pii) {
         this.data.plaid_item_id = pii;
+      }
+
+      /**
+       * Add new parameter for is_connected to track if an account is connected
+       * to Plaid or not, so a relink can be performed
+       */
+      get plaid_is_connected() {
+        return this.data.plaid_is_connected;
+      }
+
+      set plaid_is_connected(pic) {
+        this.data.plaid_is_connected = pic;
       }
 
       /**

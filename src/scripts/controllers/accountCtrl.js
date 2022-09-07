@@ -451,14 +451,13 @@ angular
       };
 
       this.plaidLink = () => {
-        fetch("http://localhost:8787/plaid/make_link_token", { method: "POST" }).then((response) => {
+        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
             this.linkToken = data.link_token;
             const handler = window.Plaid.create({
               token: this.linkToken,
               onSuccess: (public_token, metadata) => {
-                // this.onPlaidLinkSuccess(public_token, metadata);
-                fetch("http://localhost:8787/plaid/exchange_public_token", {
+                fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/exchange_public_token", {
                   method: "POST",
                   body: JSON.stringify({
                     public_token: public_token,
@@ -470,12 +469,32 @@ angular
                   response.json().then((data) => {
                     this.account.plaid_access_token = data.access_token;
                     this.account.plaid_item_id = data.item_id;
+                    this.account.plaid_is_connected = true;
                     this.manager.updateAccount(this.account);
                     $scope.$apply();
                   });
                 });
               },
-              onLoad: () => {
+              onExit: (err, metadata) => {
+              },
+            });
+            handler.open();
+          });
+        });
+      }
+
+      this.plaidLinkUpdate = () => {
+        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/make_link_token_update", {
+          method: "POST",
+          body: JSON.stringify({
+            access_token: this.account.plaid_access_token,
+          }),
+        }).then((response) => {
+          response.json().then((data) => {
+            this.linkToken = data.link_token;
+            const handler = window.Plaid.create({
+              token: this.linkToken,
+              onSuccess: (public_token, metadata) => {
               },
               onExit: (err, metadata) => {
               },
@@ -486,7 +505,7 @@ angular
       }
 
       this.plaidSync = () => {
-        fetch("http://localhost:8787/plaid/transactions", {
+        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/transactions", {
           method: "POST",
           body: JSON.stringify({
             access_token: this.account.plaid_access_token,
@@ -537,7 +556,19 @@ angular
       this.plaidDisconnect = () => {
         this.account.plaid_access_token = null;
         this.account.plaid_item_id = null;
+        this.account.plaid_is_connected = false;
         this.manager.updateAccount(this.account);
+
+        fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/remove_account", {
+          method: "POST",
+          body: JSON.stringify({
+            access_token: this.account.plaid_access_token,
+          }),
+        }).then((response) => {
+          response.json().then((request_id) => {
+            console.log(request_id);
+          });
+        });
       }
 
       that.selectGetterSetter = (trans) => {
