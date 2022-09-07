@@ -143,8 +143,8 @@
       >
         <i class="fa fa-exchange"></i> {{'MAKE_A_TRANSFER' | translate}}
       </button>
-      <button class="account__add-button" ng-if="accountCtrl.account.plaid_access_token !== null" ng-click="accountCtrl.plaidSync()">
-        <i class="fa fa-refresh"></i> Sync with Plaid
+      <button class="account__add-button" ng-if="accountCtrl.account.plaid_access_token !== null && accountCtrl.account.plaid_is_connected === true" ng-click="accountCtrl.plaidSync()">
+        <i class="fa fa-refresh" ng-class="{'fa-spin': accountCtrl.isPlaidSyncing}"></i> Sync with Plaid
       </button>
       <button class="account__add-button" ng-if="accountCtrl.account.plaid_access_token === null" ng-click="accountCtrl.plaidLink()">
         <i class="fa fa-sign-in"></i> Connect to Plaid
@@ -245,7 +245,7 @@
         class="account__th account__cell-cleared"
         st-multi-sort="dbCtrl.customSorts.cleared"
       >
-        <span><span>{{'CLEARED' | translate}}</span></span>
+        <span><span>STATUS</span></span>
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@
       ng-click="dbCtrl.stopPropagation($event)"
     ></transaction-editor>
   </div>
-<!-- TODO: Put list of pending transactions here -->
+
   <div
     class="account__tbody account__tbody--striped virtual-list"
     vs-repeat
@@ -395,13 +395,9 @@
         <div class="account__td account__cell-cleared">
           <i class="fa fa-lock" ng-if="transaction.reconciled"></i>
 
-          <div
-            class="cleared"
-            ng-if="!transaction.reconciled"
-            ng-class="{'cleared--true': transaction.cleared}"
-            ng-click="accountCtrl.setCleared($event, transaction)"
-          >
-            C
+          <div>
+            <b class="pending" ng-if="transaction.pending == true">P</b>
+            <b class="cleared" ng-if="transaction.pending == false && !transaction.reconciled" ng-class="{'cleared--true': transaction.cleared}" ng-click="accountCtrl.setCleared($event, transaction)">C</b>
           </div>
         </div>
       </div>

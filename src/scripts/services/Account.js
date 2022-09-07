@@ -88,11 +88,30 @@ angular.module("financier").factory("account", (uuid) => {
 
         this.transactions.push(trans);
 
-        if (trans.cleared) {
-          this._changeClearedBalance(trans.value);
-        } else {
-          this._changeUnclearedBalance(trans.value);
+        if (!trans.pending) {
+          if (trans.cleared) {
+            this._changeClearedBalance(trans.value);
+          } else {
+            this._changeUnclearedBalance(trans.value);
+          }
         }
+
+        trans.subscribeClearedValueChange(this._clearedValueChangeFn);
+        trans.subscribeUnclearedValueChange(this._unclearedValueChangeFn);
+      }
+
+      /**
+       * Add a pending transaction to an account
+       * 
+       * @param {Transaction} trans The pending transaction will NOT add to the account balance.
+       * The transaction will subscribe for future changes.
+       */
+      addPendingTransaction(trans) {
+        if (trans.constructorName === "SplitTransaction") {
+          return;
+        }
+
+        this.transactions.push(trans);
 
         trans.subscribeClearedValueChange(this._clearedValueChangeFn);
         trans.subscribeUnclearedValueChange(this._unclearedValueChangeFn);
@@ -144,6 +163,17 @@ angular.module("financier").factory("account", (uuid) => {
        */
       _changeUnclearedBalance(val) {
         this.cache.unclearedBalance += val;
+      }
+
+      /**
+       * Change the current pending account balance by a certain amount
+       * 
+       * @param {currency} val The relative value to change the uncleared
+       * balance by.
+       * @private
+       */
+      _changePendingBalance(val) {
+        this.cache.pendingBalance += val;
       }
 
       /**

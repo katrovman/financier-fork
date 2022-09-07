@@ -51,6 +51,7 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
 
         this.subscribeClearedValueChangeFn = [];
         this.subscribeUnclearedValueChangeFn = [];
+        this.subscribePendingValueChangeFn = [];
 
         this._data = myData;
 
@@ -571,6 +572,17 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
       }
 
       /**
+       * Used to set the function(s) to invoke upon value changes.
+       *
+       * @param {function} fn - This function will be invoked upon value
+       * changes with the amount the value has changed as the first parameter,
+       * but only when/if the value is uncleared.
+       */
+      subscribeUnclearedValueChange(fn) {
+        this.subscribeUnclearedValueChangeFn.push(fn);
+      }
+
+      /**
        * Used to unset the function to invoke upon uncleared value changes.
        *
        * @param {function} fn - The function reference originally provided
@@ -587,14 +599,30 @@ angular.module("financier").factory("transaction", (uuid, splitTransaction) => {
       }
 
       /**
-       * Used to set the function(s) to invoke upon value changes.
-       *
+       * Used to set the function(s) to invoke upon pending value changes.
+       * 
        * @param {function} fn - This function will be invoked upon value
        * changes with the amount the value has changed as the first parameter,
        * but only when/if the value is uncleared.
        */
-      subscribeUnclearedValueChange(fn) {
-        this.subscribeUnclearedValueChangeFn.push(fn);
+      subscribePendingValueChange(fn) {
+        this.subscribePendingValueChangeFn.push(fn);
+      }
+
+      /**
+       * Used to unset the function to invoke upon pending value changes.
+       *
+       * @param {function} fn - The function reference originally provided
+       * to subscribePendingValueChange.
+       */
+      unsubscribePendingValueChange(fn) {
+        const index = this.subscribePendingValueChangeFn.indexOf(fn);
+
+        if (index > -1) {
+          this.subscribePendingValueChangeFn.splice(index, 1);
+        } else {
+          throw new Error("Subscriber does not exist", fn);
+        }
       }
 
       /**

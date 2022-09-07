@@ -100,8 +100,9 @@
                 on-remove-account="dbCtrl.removeAccount(account)"
                 on-account-change="dbCtrl.filterAccounts()"
               >
-                <span style="margin-right: 5px;" ng-if="accountCtrl.account.plaid_access_token !== null && account.data.plaid_is_connected == true"><i class="fa fa-check-circle"></i></span>
-                <span style="margin-right: 5px;" ng-if="account.data.plaid_is_connected == false && accountCtrl.account.plaid_access_token === null"><i class="fa fa-times-circle"></i></span>
+                <span style="margin-right: 5px;" ng-if="account.data.plaid_is_connected == true && account.plaid_access_token !== null"><i class="fa fa-check-circle"></i></span>
+                <span style="margin-right: 5px;" ng-if="account.data.plaid_is_connected == false && account.plaid_access_token !== null"><i class="fa fa-times-circle"></i></span>
+                <span style="margin-right: 5px;" ng-if="account.data.plaid_is_connected == false && account.plaid_access_token === null"><i class="fa fa-question-circle"></i></span>
                 <span class="app-view__name">{{account.name}}</span>
                 <span
                   >{{account.cache.balance | intCurrency : true :

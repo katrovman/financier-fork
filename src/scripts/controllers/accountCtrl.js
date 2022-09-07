@@ -30,6 +30,8 @@ angular
 
       this.accountId = $stateParams.accountId;
 
+      this.isPlaidSyncing = false;
+
       if ($stateParams.accountId) {
         this.account = manager.getAccount($stateParams.accountId);
 
@@ -453,9 +455,8 @@ angular
       this.plaidLink = () => {
         fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/make_link_token", { method: "POST" }).then((response) => {
           response.json().then((data) => {
-            this.linkToken = data.link_token;
             const handler = window.Plaid.create({
-              token: this.linkToken,
+              token: data.link_token,
               onSuccess: (public_token, metadata) => {
                 fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/exchange_public_token", {
                   method: "POST",
@@ -491,10 +492,12 @@ angular
           }),
         }).then((response) => {
           response.json().then((data) => {
-            this.linkToken = data.link_token;
             const handler = window.Plaid.create({
-              token: this.linkToken,
+              token: data.link_token,
               onSuccess: (public_token, metadata) => {
+                this.account.plaid_is_connected = true;
+                this.manager.updateAccount(this.account);
+                $scope.$apply();
               },
               onExit: (err, metadata) => {
               },
@@ -505,6 +508,8 @@ angular
       }
 
       this.plaidSync = () => {
+        this.isPlaidSyncing = true;
+
         fetch("https://plaid-worker-dev.culpeppers.workers.dev/plaid/transactions", {
           method: "POST",
           body: JSON.stringify({
@@ -513,41 +518,48 @@ angular
           }),
         }).then((response) => {
           response.json().then((transactions) => {
-            //Only import transactions on or after the Initial balance date
-            let startDate = moment(this.account.transactions.find(p => p.payee == "initial-balance").date).format("YYYY-MM-DD");
-
-            for (var i = 0; i < transactions.added.length; i++) {
-              let trans = transactions.added[i];
-
-              //If the trans date is before initial date, skip
-              if (trans.date <= startDate) continue;
-
-              //If it has already been imported, skip
-              if (this.account.transactions.some(p => p.imported_id === trans.transaction_id)) continue;
-
-
-              const addTrans = new Transaction({
-                value: -(trans.amount * 100),
-                cleared: !trans.pending,
-                reconciled: false,
-                date: trans.date,
-                account: this.accountId,
-                payee: trans.name,
-                imported_id: trans.transaction_id,
-                pending: trans.pending,
-              });
-
-              this.manager.addTransaction(addTrans);
-              myBudget.put(addTrans);
+            if (transactions.error_code === "ITEM_LOGIN_REQUIRED") {
+              this.account.plaid_is_connected = false;
+              this.isPlaidSyncing = false;
+              $scope.$apply();
             }
+            else {
+              //Only import transactions on or after the Initial balance date
+              let startDate = moment(this.account.transactions.find(p => p.payee == "initial-balance").date).format("YYYY-MM-DD");
 
-            //Compare modified transactions to any existing transactions
-            for (var i = 0; i < transactions.modified.length; i++) {
-            }
+              for (var i = 0; i < transactions.added.length; i++) {
+                let trans = transactions.added[i];
 
-            //Compare removed transactions to any existing transactions
-            for (var i = 0; i < transactions.removed.length; i++) {
+                //If the trans date is before initial date, skip
+                if (trans.date <= startDate) continue;
+
+                //If it has already been imported, skip
+                if (this.account.transactions.some(p => p.imported_id === trans.transaction_id)) continue;
+
+                const addTrans = new Transaction({
+                  value: -(trans.amount * 100),
+                  cleared: !trans.pending,
+                  reconciled: false,
+                  date: trans.date,
+                  account: this.accountId,
+                  payee: trans.name,
+                  imported_id: trans.transaction_id,
+                  pending: trans.pending,
+                });
+
+                this.manager.addTransaction(addTrans);
+                myBudget.put(addTrans);
+              }
+
+              //Compare modified transactions to any existing transactions
+              for (var i = 0; i < transactions.modified.length; i++) {
+              }
+
+              //Compare removed transactions to any existing transactions
+              for (var i = 0; i < transactions.removed.length; i++) {
+              }
             }
+            this.isPlaidSyncing = false;
             $scope.$apply();
           });
         });
